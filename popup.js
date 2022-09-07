@@ -1,4 +1,5 @@
 const timeElement = document.getElementById('time');
+const nameElement = document.getElementById('name');
 
 const setTime = () => {
   const currentTime = new Date().toLocaleTimeString();
@@ -6,7 +7,8 @@ const setTime = () => {
 };
 
 const setBadgeText = () => {
-  return chrome.action.setBadgeText(
+  // https://developer.chrome.com/docs/extensions/reference/action/
+  chrome.action.setBadgeText(
     {
       text: 'TIME',
     },
@@ -19,6 +21,11 @@ const setBadgeText = () => {
 const onComponentDidMount = () => {
   setBadgeText();
   setTime();
+  chrome.storage.sync.get(['name'], ({ name = '' }) => {
+    if (!name) return;
+
+    nameElement.textContent = `Your name is: ${name}`;
+  });
 };
 
 setInterval(() => {
